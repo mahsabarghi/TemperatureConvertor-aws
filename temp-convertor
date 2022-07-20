@@ -1,0 +1,54 @@
+from flask import Flask
+from flask import request
+#from flask import render_template
+
+app = Flask(__name__)
+
+@app.route('/')
+def homepage():
+    website = '''
+<!DOCTYPE html>
+<html>
+<body>
+    <center><img src="https://www.pngkey.com/png/full/297-2976588_temperature-conversion-convert-temperature-icon.png" width="640" height="250">
+    </center>
+    <h1><center>Welcome to our Temperature Convertor application</center></h1>
+    <br>
+    <h2><center>Enter a value in Celsius or Farenheit, and it will be converted</center></h2>
+    <center><form action="tempConversion" method="POST">
+    <label for="temp-type-select">Choose a temperature type:</label>
+    <select name="types" id="type-select">
+    <option value="">--Please choose an option--</option>
+    <option value=0>Celcius</option>
+    <option value=1>Farenheit</option>
+    </select>
+        <input type="text" name="tempInCelsius">
+        <input type="submit" value="Convert">
+    </form></center>
+  
+</body>
+</html>'''
+    return website
+
+@app.route('/tempConversion', methods=['POST'])
+def my_form_post():
+    temp = request.form['tempInCelsius']
+    option = request.form['types']
+    try:
+        if option == '0':
+            celsiusTemp = float(temp)
+            fahrenheitTemp = (celsiusTemp * 9.0/5) + 32
+            return str(fahrenheitTemp)
+        elif option=='1':
+            farenheitTemp = float(temp)
+            celsiusTemp = (farenheitTemp - 32) * 5.0/9
+            return str(celsiusTemp)
+        else:
+            return "You should first choose a temperature type. Please go back and try again."
+    except:
+        return "That's not a number!"
+
+
+
+if __name__ == '__main__':
+    app.run()
